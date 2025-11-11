@@ -1,7 +1,16 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import LaunchPage from './pages/LaunchPage';
+import PostsPage from './pages/PostsPage';
 
 function App() {
-  return <LaunchPage />
-};
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LaunchPage />} />
+        <Route path="/posts" element={<PostsPage />} />
+      </Routes>
+    </Router>
+  );
+}
 
 export default App
