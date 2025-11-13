@@ -1,6 +1,6 @@
 import React from "react"; 
 
-const Post = ({ title, author, upvotes, comments, thumbnail }) => {
+const Post = ({ title, author, ups, num_comments, thumbnail }) => {
     return (
         <div className="post">
             <h3 className="post-title">{title}</h3>
@@ -10,10 +10,19 @@ const Post = ({ title, author, upvotes, comments, thumbnail }) => {
                 </div>
             )}
             <p>
-            Posted by {author} | Upvotes: {upvotes} | Comments: {comments}
+            Posted by {author} | Upvotes: {ups} | Comments: {num_comments}
             </p>
         </div>
     );
 };
 
 export default Post;
+
+import PropTypes from "prop-types";
+Post.propTypes = {
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    ups: PropTypes.number.isRequired,
+    num_comments: PropTypes.number.isRequired,
+    thumbnail: PropTypes.string,
+};

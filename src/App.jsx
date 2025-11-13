@@ -7,7 +7,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LaunchPage />} />
-        <Route path="/posts" element={<PostsPage />} />
+        <Route path="/r/:subreddit" element={<PostsPage />} />
       </Routes>
     </Router>
   );
