@@ -1,10 +1,9 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import Post from "./Post";
+import PropTypes from "prop-types";
 
-const PostList = () => {
-  const posts = useSelector((state) => state.posts.items);
-
+const PostList = ({ posts = [], subreddit }) => {
+  console.log("PostList rendering, subreddit:", subreddit, "posts:", posts);
   return (
     <div className="post-list">
       {posts.map((post) => (
@@ -14,9 +13,9 @@ const PostList = () => {
   );
 };
 
-export default PostList;
-
-import PropTypes from "prop-types";
 PostList.propTypes = {
+  posts: PropTypes.array,
   subreddit: PropTypes.string.isRequired,
 };
+
+export default PostList;

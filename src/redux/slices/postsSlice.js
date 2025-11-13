@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchRedditData } from "../../api/reddit";
+import { fetchSubredditPosts } from '../../api/fetchSubredditPosts';
+
 
 export const loadPosts = createAsyncThunk(
   'posts/loadPosts',
   async (subreddit, { rejectWithValue }) => {
     try {
-      const posts = await fetchRedditData(subreddit, true);
+      const posts = await fetchSubredditPosts(subreddit);
       return posts;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -16,7 +17,7 @@ export const loadPosts = createAsyncThunk(
 const postsSlice = createSlice({
     name: 'posts',
     initialState: {
-        items: [],
+        itemsBySubreddit: {},
         status: "idle",
         error: null,
     },
@@ -29,7 +30,8 @@ const postsSlice = createSlice({
         })
         .addCase(loadPosts.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            state.items = action.payload;
+            const subreddit = action.meta.arg;
+            state.itemsBySubreddit[subreddit] = action.payload;
         })
         .addCase(loadPosts.rejected, (state, action) => {
             state.status = 'failed';
