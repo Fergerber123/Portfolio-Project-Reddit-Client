@@ -25,7 +25,9 @@ export async function fetchSubredditPosts(subreddit) {
   }
 
   const data = await response.json();
-  const posts = data.data.children.map(child => child.data);
+  const posts = data.data.children
+    .map(child => child.data)
+    .filter(post => !post.stickied);
 
   // Save to cache
   cache[subreddit] = posts;

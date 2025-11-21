@@ -2,8 +2,8 @@ import React from "react";
 import Post from "./Post";
 import PropTypes from "prop-types";
 
-const PostList = ({ posts = [], subreddit }) => {
-  console.log("PostList rendering, subreddit:", subreddit, "posts:", posts);
+const PostList = ({ posts = [] }) => {
+
   return (
     <div className="post-list">
       {posts.map((post) => (
@@ -15,7 +15,6 @@ const PostList = ({ posts = [], subreddit }) => {
 
 PostList.propTypes = {
   posts: PropTypes.array,
-  subreddit: PropTypes.string.isRequired,
 };
 
 export default PostList;

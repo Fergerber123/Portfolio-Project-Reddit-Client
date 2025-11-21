@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import PostList from "../components/PostList";
+import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
 import { loadPosts } from "../redux/slices/postsSlice";
 import { setSelectedSubreddit } from "../redux/slices/appslice";
@@ -42,10 +43,11 @@ const PostsPage = () => {
 
   return (
     <div className="posts-page">
+      <Header />
       <SearchBar />
       {status === 'loading' && <p>Loading posts...</p>}
       {status === 'failed' && <p>Error: {error}</p>}
-      {status === 'succeeded' && <PostList posts={posts} subreddit={subreddit} />}
+      {status === 'succeeded' && <PostList posts={posts} />}
     </div>
   );
 };
