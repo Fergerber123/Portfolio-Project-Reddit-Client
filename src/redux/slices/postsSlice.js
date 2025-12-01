@@ -20,8 +20,13 @@ const postsSlice = createSlice({
         itemsBySubreddit: {},
         status: "idle",
         error: null,
+        filter: "top",
     },
-    reducers: {},
+    reducers: {
+      setFilter(state, action) {
+      state.filter = action.payload;
+      },
+    },
     extraReducers: (builder) => {
       builder
         .addCase(loadPosts.pending, (state) => {
@@ -39,5 +44,7 @@ const postsSlice = createSlice({
         });
     },
 });
+
+export const { setFilter } = postsSlice.actions;
 
 export default postsSlice.reducer;
