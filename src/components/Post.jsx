@@ -1,24 +1,43 @@
 import React from "react"; 
-import extractMedia from "../features/extractData";
+import { useDispatch } from "react-redux";
+import extractMedia from "../features/extractMedia";
+import PropTypes from "prop-types";
+import { toggleSelectedPost } from "../redux/slices/postsSlice";
 
 
-const Post = ( post ) => {
-    const { title, author, ups, num_comments, thumbnail, selftext } = post;
+
+const Post = ({ id, title, author, ups, num_comments, thumbnail, selftext, permalink, ...post }) => {
+
     const { type: mediaType, url: mediaUrl } = extractMedia(post);
-    console.log(mediaType);
-    return (
-        <div className="post">
-            <h3 className="post-title">{title}</h3>
 
-            <div className="post-media">
-                {mediaType === "image" && <img src={mediaUrl} alt="" />}
+    const dispatch = useDispatch();
+
+    return (
+        <div className="post-tile" onClick={() => dispatch(toggleSelectedPost(id))}>
+            <div className="post-meta" >
+                <span>{author}</span>
+                <h3>{title}</h3>
+                <span>{ups} • {num_comments}</span>
+                <a
+                    href={`https://www.reddit.com${permalink}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="view-on-reddit"
+                >
+                    View on Reddit
+                </a>
+            </div>
+            <div className="post-media-container">
+                {mediaType === "image" && (
+                <img src={mediaUrl} alt="" className="post-media-img" />
+                )}
 
                 {mediaType === "video" && (
-                <video controls src={mediaUrl} />
+                <video controls className="post-media-img" src={mediaUrl} />
                 )}
 
                 {mediaType === "gif" && (
-                <video autoPlay loop muted src={mediaUrl} />
+                <video autoPlay loop muted className="post-media-img" src={mediaUrl} />
                 )}
 
                 {mediaType === "external" && (
@@ -27,27 +46,26 @@ const Post = ( post ) => {
                 </a>
                 )}
 
-                {mediaType === "self" && <p>{selftext}</p>}
+                {mediaType === "self" && <p className="post-text">{selftext}</p>}
 
-
-                {!mediaType && thumbnail && <img src={thumbnail} alt="Post thumbnail" />}
+                {!mediaType && thumbnail && (
+                <img src={thumbnail} alt="Post thumbnail" className="post-media-img" />
+                )}
             </div>
-
-            <p>
-            Posted by {author} | Upvotes: {ups} | Comments: {num_comments}
-            </p>
         </div>
     );
 };
 
-export default Post;
-
-import PropTypes from "prop-types";
 Post.propTypes = {
+    id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
     ups: PropTypes.number.isRequired,
     num_comments: PropTypes.number.isRequired,
     thumbnail: PropTypes.string,
     self_text: PropTypes.string,
+    permalink: PropTypes.string.isRequired,
+    post: PropTypes.object,
 };
+
+export default Post;

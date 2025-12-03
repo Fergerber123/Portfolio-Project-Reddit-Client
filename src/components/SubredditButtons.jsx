@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedSubreddit } from "../redux/slices/appslice";
@@ -10,9 +10,6 @@ export default function SubredditButtons() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const selectedSubreddit = useSelector(state => state.app.selectedSubreddit);
-    useEffect(() => {
-        console.log("Selected subreddit (updated):", selectedSubreddit);
-    }, [selectedSubreddit]);
 
 
     const handleClick = (subreddit) => {

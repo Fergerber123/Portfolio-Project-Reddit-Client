@@ -4,9 +4,9 @@ import { fetchSubredditPosts } from '../../api/fetchSubredditPosts';
 
 export const loadPosts = createAsyncThunk(
   'posts/loadPosts',
-  async (subreddit, { rejectWithValue }) => {
+  async ({subreddit, filter}, { rejectWithValue }) => {
     try {
-      const posts = await fetchSubredditPosts(subreddit);
+      const posts = await fetchSubredditPosts(subreddit, filter);
       return posts;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -20,11 +20,20 @@ const postsSlice = createSlice({
         itemsBySubreddit: {},
         status: "idle",
         error: null,
-        filter: "top",
+        filter: "hot",
+        selectedPosts: [],
     },
     reducers: {
       setFilter(state, action) {
       state.filter = action.payload;
+      },
+      toggleSelectedPost(state, action) {
+        const id = action.payload;
+        if (state.selectedPosts.includes(id)) {
+          state.selectedPosts = state.selectedPosts.filter(x => x !== id);
+        } else {
+          state.selectedPosts.push(id);
+        }
       },
     },
     extraReducers: (builder) => {
@@ -35,8 +44,9 @@ const postsSlice = createSlice({
         })
         .addCase(loadPosts.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            const subreddit = action.meta.arg;
-            state.itemsBySubreddit[subreddit] = action.payload;
+            const { subreddit, filter } = action.meta.arg;
+            const key = `${subreddit}:${filter}`;
+            state.itemsBySubreddit[key] = action.payload;
         })
         .addCase(loadPosts.rejected, (state, action) => {
             state.status = 'failed';
@@ -45,6 +55,6 @@ const postsSlice = createSlice({
     },
 });
 
-export const { setFilter } = postsSlice.actions;
+export const { setFilter, toggleSelectedPost } = postsSlice.actions;
 
 export default postsSlice.reducer;

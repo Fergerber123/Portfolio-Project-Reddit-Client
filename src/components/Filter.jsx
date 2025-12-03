@@ -8,9 +8,9 @@ export default function Filter() {
 
     const dispatch = useDispatch()
 
-    const handleClickTop = () => {
-        dispatch(setFilter('top'))
-        document.getElementById('top').classList.add('active')
+    const handleClickHot = () => {
+        dispatch(setFilter('hot'))
+        document.getElementById('hot').classList.add('active')
         document.getElementById('best').classList.remove('active')
         document.getElementById('new').classList.remove('active')
     }
@@ -18,7 +18,7 @@ export default function Filter() {
     const handleClickBest = () => {
         dispatch(setFilter('best'))
         document.getElementById('best').classList.add('active')
-        document.getElementById('top').classList.remove('active')
+        document.getElementById('hot').classList.remove('active')
         document.getElementById('new').classList.remove('active')
     }
 
@@ -26,7 +26,7 @@ export default function Filter() {
         dispatch(setFilter('new'))
         document.getElementById('new').classList.add('active')
         document.getElementById('best').classList.remove('active')
-        document.getElementById('top').classList.remove('active')
+        document.getElementById('hot').classList.remove('active')
     }
 
     return (
@@ -35,9 +35,9 @@ export default function Filter() {
                 <p>Filter by:</p>
             </div>
             <div className="containter">
-                <div className="card" id='top' onClick={handleClickTop}>
-                    <img src="/top-icon.png"></img>
-                    <p>Top</p>
+                <div className="card" id='hot' onClick={handleClickHot}>
+                    <img src="/hot-icon.png"></img>
+                    <p>Hot</p>
                 </div>
                 <div className="card" id='best' onClick={handleClickBest}>
                     <img src="/best-icon.png"></img>

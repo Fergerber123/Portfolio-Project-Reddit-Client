@@ -1,33 +1,33 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import PostList from "../components/PostList";
 import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
 import Filter from "../components/Filter";
+import PostList from "../components/PostList";
 import { loadPosts } from "../redux/slices/postsSlice";
-import makeSelectFilteredPosts from "../features/FilteredPostsSelector";
-import { selectPostsStatus, selectPostsError } from "../features/postsSelector";
 
 const PostsPage = () => {
   const { subreddit } = useParams();
   const dispatch = useDispatch();
 
-  const cached = useSelector((state) => state.posts.itemsBySubreddit?.[subreddit]);
+  const filter = useSelector((state) => state.posts.filter);
 
-  const selectPosts = useMemo(() => makeSelectFilteredPosts(), []);
-  const posts = useSelector((state) => selectPosts(state, subreddit));
 
-  const status = useSelector(selectPostsStatus);
-  const error = useSelector(selectPostsError);
+  const cacheKey = `${subreddit}:${filter}`;
+  const cached = useSelector((state) => state.posts.itemsBySubreddit?.[cacheKey]);
+
+  const posts = cached || [];
+  const status = useSelector((state) => state.posts.status);
+  const error = useSelector((state) => state.posts.error);
+
   
   useEffect(() => {
     if (!subreddit) return;
-
     if (!cached) {
-      dispatch(loadPosts(subreddit));
+      dispatch(loadPosts({subreddit, filter }));
     }
-  }, [subreddit, cached, dispatch]);
+  }, [subreddit, filter, dispatch]);
 
   return (
     <div className="posts-page">

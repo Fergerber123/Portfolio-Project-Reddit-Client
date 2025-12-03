@@ -1,21 +1,26 @@
-// in-memory cache
 const cache = {};
 const lastFetchTime = {};
 
-export async function fetchSubredditPosts(subreddit) {
+export async function fetchSubredditPosts(subreddit, filter) {
   if (!subreddit) throw new Error("No subreddit provided");
+
+    const cacheKey = `${subreddit}:${filter}`;
 
   // Rate-limit: prevent fetching too often
   const now = Date.now();
-  if (lastFetchTime[subreddit] && now - lastFetchTime[subreddit] < 6000) {
+  if (lastFetchTime[cacheKey] && now - lastFetchTime[cacheKey] < 6000) {
     throw new Error("Rate limit reached. Please wait a few seconds.");
   }
-  lastFetchTime[subreddit] = now;
+  lastFetchTime[cacheKey] = now;
 
   // Return cached data if available
-  if (cache[subreddit]) return cache[subreddit];
+  if (cache[cacheKey]) return cache[cacheKey];
 
-  const response = await fetch(`https://www.reddit.com/r/${subreddit}.json`);
+  const url = `https://www.reddit.com/r/${subreddit}/${filter}.json?limit=25&raw_json=1`;
+
+  console.log("Fetching URL:", url);
+
+  const response = await fetch(url);
 
   if (response.status === 429) {
     throw new Error("Rate limit reached. Try again in a moment.");
@@ -30,7 +35,7 @@ export async function fetchSubredditPosts(subreddit) {
     .filter(post => !post.stickied);
 
   // Save to cache
-  cache[subreddit] = posts;
+  cache[cacheKey] = posts;
 
   return posts;
 }
